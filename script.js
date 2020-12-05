@@ -2,38 +2,38 @@ function randomNumberID(){
   return Math.floor(Math.random()*(1000002 - 1 + 1)) + 1;
 }
 $(document).ready( function () {
-  getProductLists();
+  getrecomLists();
   document.getElementById('modalSubmit').addEventListener('click', modalSubmit);
 
   function modalSubmit (e) {
-    let productTempId = randomNumberID();
+    let recomTempId = randomNumberID();
     let inputName = document.getElementById('inputName').value;
     let inputRecom = document.getElementById('inputRecom').value;
     let rating = document.getElementById('rating').value;
 
-    const productId = productTempId+inputName+randomNumberID(); //Used to give each product a unique id
+    const recomId = recomTempId+inputName+randomNumberID(); //Used to give each recom a unique id
     if(inputName !== '' && inputRecom !== ''){
-      let newProduct = {
-         id: productId,
+      let newrecom = {
+         id: recomId,
         name: inputName.toUpperCase(),
         category: rating,
         description: inputRecom
        };
 
-      //Add new product to localStorage. The localStorage key for all the product is productList'
-      if(localStorage.getItem("productList") === null || localStorage.getItem("productList") === [] || localStorage.getItem("productList") === undefined ){
-        let productList = [];
-        productList.push(newProduct);
-        localStorage.setItem("productList", JSON.stringify(productList));
+      //Add new recom to localStorage. The localStorage key for all the recom is recomList'
+      if(localStorage.getItem("recomList") === null || localStorage.getItem("recomList") === [] || localStorage.getItem("recomList") === undefined ){
+        let recomList = [];
+        recomList.push(newrecom);
+        localStorage.setItem("recomList", JSON.stringify(recomList));
       } else {
-        let productList = JSON.parse(localStorage.getItem("productList"));
-        productList.push(newProduct);
-        localStorage.setItem("productList", JSON.stringify(productList));
+        let recomList = JSON.parse(localStorage.getItem("recomList"));
+        recomList.push(newrecom);
+        localStorage.setItem("recomList", JSON.stringify(recomList));
       }
      } else{
        alert('All fields are required. Please check your entries again');
      }
-    getProductLists();
+    getrecomLists();
 
     resetForm();
    e.preventDefault();
@@ -42,26 +42,26 @@ $(document).ready( function () {
 }); //DocumentBody end tag
 
 //get the data stored in the localStorage for display on load
-function getProductLists() {
-  if(localStorage.getItem("productList") === null){
-    alert("Your dashboard is currently empty. Use the add button to add new products.");
+function getrecomLists() {
+  if(localStorage.getItem("recomList") === null){
+    alert("Your dashboard is currently empty. Use the add button to add new recoms.");
     document.getElementById("recomShow").disabled = true;
   } else {
     document.getElementById("recomShow").disabled = false;
-    let productList = JSON.parse(localStorage.getItem("productList"));
+    let recomList = JSON.parse(localStorage.getItem("recomList"));
     let display = document.getElementById('display');
     //Display result
     display.innerHTML = '';
-    for (let i = 0; i < productList.length; i++){
-      let id = productList[i].id;
-      let name = productList[i].name;
-      let category = productList[i].category;
-      let description = productList[i].description;
+    for (let i = 0; i < recomList.length; i++){
+      let id = recomList[i].id;
+      let name = recomList[i].name;
+      let category = recomList[i].category;
+      let description = recomList[i].description;
 
       display.innerHTML += '<li class="recom-text list-group-item"><strong>'+name+'</strong><p>'+category+'</p><p>'+description+'</p><p><a' +
-          ' href="#" onclick="editProduct(\''+id+'\')" data-toggle="modal" data-target="#addNewRecomModal">' +
+          ' href="#" onclick="editrecom(\''+id+'\')" data-toggle="modal" data-target="#addNewRecomModal">' +
           '<i class="fa fa-edit green-text darken-2 "></i>&nbsp;Edit</a> &nbsp;&nbsp; ' +
-          '<a href="#" id="deleteId" onclick="deleteProduct(\''+id+'\')"><i class="fa fa-trash' +
+          '<a href="#" id="deleteId" onclick="deleterecom(\''+id+'\')"><i class="fa fa-trash' +
           ' red-text' +
           ' darken-2"></i>&nbsp;' +
           ' Delete</a>' +
@@ -73,27 +73,27 @@ function getProductLists() {
 
 
 // deleting the main bookmark.
-function deleteProduct(id) {
-  let productList = JSON.parse(localStorage.getItem("productList"));
-  for(let i = 0; i < productList.length; i++){
-    if (productList[i].id === id) {
-      productList.splice(i,1);
+function deleterecom(id) {
+  let recomList = JSON.parse(localStorage.getItem("recomList"));
+  for(let i = 0; i < recomList.length; i++){
+    if (recomList[i].id === id) {
+      recomList.splice(i,1);
       //console.log(result);
     }
   }
-  localStorage.setItem("productList", JSON.stringify(productList)); //reset the values in the local storage
-  getProductLists(); // to quickly display what is remaining from local storage.
+  localStorage.setItem("recomList", JSON.stringify(recomList)); //reset the values in the local storage
+  getrecomLists(); // to quickly display what is remaining from local storage.
 }
 
-// Editing a product
-function editProduct(id) {
+// Editing a recom
+function editrecom(id) {
   "use strict";
   document.getElementById('modalSubmit').style.display = "none";
   document.getElementById("addNewRecomModalLabel").textContent = "Edit Recommendation";
 
   let tempId = id;
   let parentDiv = document.getElementById('modalFooter');
-  let productList = JSON.parse(localStorage.getItem("productList"));
+  let recomList = JSON.parse(localStorage.getItem("recomList"));
 
 
   if (parentDiv.contains(document.getElementById("editButton"))) {
@@ -105,28 +105,28 @@ function editProduct(id) {
     editButton.textContent = " Save Changes";
     parentDiv.appendChild(editButton);
   }
-  for (let i = 0; i < productList.length; i++) {
-    if (productList[i].id === id) {
-      document.getElementById("inputName").value = productList[i].name;
-      document.getElementById("inputRecom").value = productList[i].description;
-      document.getElementById("rating").value = productList[i].category;
+  for (let i = 0; i < recomList.length; i++) {
+    if (recomList[i].id === id) {
+      document.getElementById("inputName").value = recomList[i].name;
+      document.getElementById("inputRecom").value = recomList[i].description;
+      document.getElementById("rating").value = recomList[i].category;
     }
   }
 
   document.getElementById("editButton").addEventListener("click", function () {
-    addProduct();
-    let productList = JSON.parse(localStorage.getItem("productList"));
-    for(let i = 0; i < productList.length; i++){
-      if(productList[i].id === tempId){
-        productList.splice(i,1);
+    addrecom();
+    let recomList = JSON.parse(localStorage.getItem("recomList"));
+    for(let i = 0; i < recomList.length; i++){
+      if(recomList[i].id === tempId){
+        recomList.splice(i,1);
       }
     }
-    localStorage.setItem("productList", JSON.stringify(productList));
-    getProductLists();
+    localStorage.setItem("recomList", JSON.stringify(recomList));
+    getrecomLists();
     resetForm();
     document.getElementById("editButton").style.display = "none";
 
-    $(".addNewRecom").on('click',productFormReset());
+    $(".addNewRecom").on('click',recomFormReset());
 
   });
 
@@ -138,35 +138,35 @@ function resetForm() {
   document.getElementById("rating").value = "";
 }
 
-function productFormReset() {
+function recomFormReset() {
   document.getElementById('modalSubmit').style.display = "block";
-  document.getElementById("addNewRecomModalLabel").textContent = "New Product Form";
+  document.getElementById("addNewRecomModalLabel").textContent = "New recom Form";
   document.getElementById('editButton').style.display = "none";
 }
 
 
-function addProduct() {
-  let productTempId = randomNumberID();
+function addrecom() {
+  let recomTempId = randomNumberID();
   let inputName = document.getElementById('inputName').value;
   let inputRecom = document.getElementById('inputRecom').value;
   let rating = document.getElementById('rating').value;
 
-  const productId = productTempId + inputName + randomNumberID(); //Used to give each product a unique id
+  const recomId = recomTempId + inputName + randomNumberID(); //Used to give each recom a unique id
   if (inputName !== '' && inputRecom !== '') {
-    let newProduct = {
-      id: productId,
+    let newrecom = {
+      id: recomId,
       name: inputName.toUpperCase(),
       category: rating,
       description: inputRecom
     };
-    if (localStorage.getItem("productList") === null || localStorage.getItem("productList") === [] || localStorage.getItem("productList") === undefined) {
-      let productList = [];
-      productList.push(newProduct);
-      localStorage.setItem("productList", JSON.stringify(productList));
+    if (localStorage.getItem("recomList") === null || localStorage.getItem("recomList") === [] || localStorage.getItem("recomList") === undefined) {
+      let recomList = [];
+      recomList.push(newrecom);
+      localStorage.setItem("recomList", JSON.stringify(recomList));
     } else {
-      let productList = JSON.parse(localStorage.getItem("productList"));
-      productList.push(newProduct);
-      localStorage.setItem("productList", JSON.stringify(productList));
+      let recomList = JSON.parse(localStorage.getItem("recomList"));
+      recomList.push(newrecom);
+      localStorage.setItem("recomList", JSON.stringify(recomList));
     }
   }
 }
